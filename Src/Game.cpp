@@ -8,34 +8,72 @@ Game::Game()
 	texture_cursor.loadFromFile("../Build/res/images/cursor-pointer.png");
 	sprite_cursor.setTexture(texture_cursor);
 	sprite_cursor.setPosition(50, 50);
+
+	musicBuffer.loadFromFile("../Build/res/audio/game.wav");
+	music.setBuffer(musicBuffer);
 	walls[0] = new RectangleShape;
 	walls[1] = new RectangleShape;
 	walls[2] = new RectangleShape;
 	InitPhysics();
 }
 
-void Game::StartGame(RenderWindow* _wnd) {
+int Game::StartGame(RenderWindow* _wnd, int _level) {
 	//Setup
 	wnd = _wnd;
+	levelGame = _level;
 	wnd->setVisible(true);
-	SetZoom();
+	SetZoom(true);
 	wnd->setFramerateLimit(fps);
-
-	//Objects
-	rag = new Ragdoll(phyWorld, wnd);
-	canon = new Canon(phyWorld, wnd);
-
-	//Objetos de nivel
-	//box = new Obstacle(phyWorld, wnd, b2Vec2(50.f, 50.f));
-	//pendulum = new Pendulum(phyWorld, wnd, b2Vec2(50.f, 10.f));
-	winObject = new WinObject(phyWorld, wnd, b2Vec2(75.f, 10.f));
-	printf("EL ID DEL WIN OBJECT PRINCIPAL ES: %d", winObject->GetId());
+	InitLevels(levelGame);
+	music.setLoop(true);
+	music.play();
 	Loop();
+	SetZoom(false);
+
+	return levelGame <= MAX_LEVELS ? levelGame : -1;
+}
+
+void Game::InitLevels(int level) {
+
+	for (int i = 0; i < 3; i++)
+	{
+		box[i] = NULL;
+		pendulum[i] = NULL;
+	}
+	switch (level)
+	{
+		case 1:
+			rag = new Ragdoll(phyWorld, wnd);
+			//Canon
+			canon = new Canon(phyWorld, wnd);
+
+			//Objetos de nivel
+			box[0] = new Obstacle(phyWorld, wnd, b2Vec2(70.f, 50.f));
+			pendulum[0] = new Pendulum(phyWorld, wnd, b2Vec2(50.f, 10.f));
+			winObject = new WinObject(phyWorld, wnd, b2Vec2(75.f, 10.f));
+			break;
+		case 2:
+			rag = new Ragdoll(phyWorld, wnd);
+			//Canon
+			canon = new Canon(phyWorld, wnd);
+
+			//Objetos de nivel
+			box[0] = new Obstacle(phyWorld, wnd, b2Vec2(90.f, 50.f));
+			box[1] = new Obstacle(phyWorld, wnd, b2Vec2(70.f, 50.f));
+			pendulum[0] = new Pendulum(phyWorld, wnd, b2Vec2(65.f, 10.f));
+			pendulum[1] = new Pendulum(phyWorld, wnd, b2Vec2(45.f, 10.f));
+			pendulum[2] = new Pendulum(phyWorld, wnd, b2Vec2(25.f, 10.f));
+			winObject = new WinObject(phyWorld, wnd, b2Vec2(90.f, 30.f));
+			break;
+		default:
+			break;
+	}
+	winObject->SetIsTouched(false);
 }
 
 void Game::Loop()
 {
-	while(wnd->isOpen())
+	while(wnd->isOpen() && !winObject->GetIsTouched())
 	{
 		wnd->clear(clearColor);
 		DoEvents();
@@ -43,6 +81,10 @@ void Game::Loop()
 		UpdatePhysics();
 		DrawGame();
 		wnd->display();
+	}
+
+	if (winObject->GetIsTouched()) {
+		levelGame++;
 	}
 }
 
@@ -68,11 +110,26 @@ void Game::DrawGame()
 	wnd->draw(*walls[1]);
 	wnd->draw(*walls[2]);
 
-	//box->UpdatePosition();
-	//box->Draw();
+	box[0]->UpdatePosition();
+	box[0]->Draw();
 
-	//pendulum->UpdatePosition();
-	//pendulum->Draw();
+	if (box[1]) {
+		box[1]->UpdatePosition();
+		box[1]->Draw();
+	}
+
+	pendulum[0]->UpdatePosition();
+	pendulum[0]->Draw();
+
+	if (pendulum[1]) {
+		pendulum[1]->UpdatePosition();
+		pendulum[1]->Draw();
+	}
+
+	if (pendulum[2]) {
+		pendulum[2]->UpdatePosition();
+		pendulum[2]->Draw();
+	}
 
 	//Win object
 	winObject->UpdatePosition();
@@ -101,7 +158,7 @@ void Game::DoEvents()
 				}
 				break;
 			case sf::Event::MouseMoved:
-				//sprite_cursor.setPosition((float)evt.mouseMove.x, (float)evt.mouseMove.y);
+				sprite_cursor.setPosition((float)evt.mouseMove.x, (float)evt.mouseMove.y);
 				break;
 			case Event::MouseButtonPressed:
 				Vector2i mouse_position = Mouse::getPosition(*wnd);
@@ -120,13 +177,22 @@ void Game::CheckCollitions()
 
 // Definimos el area del mundo que veremos en nuestro juego
 // Box2D tiene problemas para simular magnitudes muy grandes
-void Game::SetZoom()
+void Game::SetZoom(bool isGame)
 {
 	View camara;
+	Vector2f data = camara.getCenter();
+	printf("%f    %f", data.x, data.y);
 	// Posicion del view
-	camara.setSize(100.0f, 100.0f);
-	camara.setCenter(50.0f, 50.0f);
-	wnd->setView(camara); //asignamos la camara
+	if (isGame) 
+	{
+		camara.setSize(100.0f, 100.0f);
+		camara.setCenter(50.0f, 50.0f);
+		wnd->setView(camara); //asignamos la camara
+	}
+	else 
+	{
+		wnd->setView(wnd->getDefaultView());
+	}
 }
 
 void Game::InitPhysics()

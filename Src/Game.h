@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
 #include "SFMLRenderer.h"
 #include <list>
 #include "../Build/Ragdoll.h"
@@ -9,7 +10,7 @@
 #include "../Build/Obstacle.h"
 #include "../Build/Pendulum.h"
 #include "../Build/WinObject.h"
-
+#define MAX_LEVELS 2
 using namespace sf;
 
 class Game
@@ -25,6 +26,10 @@ private:
 	b2World *phyWorld;
 	SFMLRenderer *debugRender;
 
+	//Music
+	SoundBuffer musicBuffer;
+	Sound music;
+
 	//SFML
 	RectangleShape* walls[3];
 	Texture texture_cursor;
@@ -34,6 +39,9 @@ private:
 	//tiempo de frame
 	float frameTime;
 	int fps;
+
+	//Nivel del juego
+	int levelGame;
 
 	// Cuerpo de box2d
 	b2Body* controlBody;
@@ -45,29 +53,29 @@ private:
 	Ragdoll* rag;
 
 	//Simple box
-	Obstacle* box;
+	Obstacle* box[3];
 
 	//Pendulum
-	Pendulum* pendulum;
+	Pendulum* pendulum[3];
 
 	//WinObject
 	WinObject* winObject;
 
+	void CheckCollitions();
+	void InitPhysics(); //Crea el suelo
+	void InitLevels(int level);
+	void Loop();
+	void DrawGame();
+	void UpdatePhysics();
+	void DoEvents();
+	void SetZoom(bool isGame);
 public:
 
 	// Constructores, destructores e inicializadores
 	Game();
-	void CheckCollitions();
-	void CreateEnemy(int x, int y);
 	~Game(void);
-	void InitPhysics(); //Crea el suelo
 
 	// Main game loop
-	void Loop();
-	void StartGame(RenderWindow* _wnd);
-	void DrawGame();
-	void UpdatePhysics();
-	void DoEvents();
-	void SetZoom();
+	int StartGame(RenderWindow* _wnd, int _level);
 };
 
