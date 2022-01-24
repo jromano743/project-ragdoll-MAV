@@ -7,6 +7,7 @@ WinObject::WinObject(b2World* _world, RenderWindow* _wnd, b2Vec2 position){
 	//Setup
 	float x = 5, y = 5;
 	id = 1;
+	isTouched = false;
 
 	//Bodydef
 	bodyDef.position = position;
@@ -19,9 +20,11 @@ WinObject::WinObject(b2World* _world, RenderWindow* _wnd, b2Vec2 position){
 	shp_box = new b2PolygonShape();
 	shp_box->SetAsBox(x, y);
 
-	int* i = new int();
-	*i = 1;
-	body->SetUserData(i);
+	//User Data
+	//int* i = new int();
+	//*i = id;
+	//body->SetUserData(i);
+	body->GetUserData().pointer = (uintptr_t)id;
 
 	//Fixture def
 	fixtureDef.shape = shp_box;
@@ -49,30 +52,27 @@ void WinObject::Draw() {
 void WinObject::UpdatePosition() {
 	shape->setPosition(body->GetPosition().x, body->GetPosition().y);
 	shape->setRotation(body->GetAngle() * 180 / 3.14f);
+	id = (int)body->GetUserData().pointer;
+	ChangeColor();
+}
+
+void WinObject::ChangeColor() {
+	if (id == 0) {
+		shape->setFillColor(Color::Red);
+		isTouched = true;
+	}else {
+		shape->setFillColor(Color::Cyan);
+	}
 }
 
 int WinObject::GetUserData() {
-	return id;
+	return *(int*)body->GetUserData().pointer;
 }
 
-int WinObject::GetId() {
-	return id;
+bool WinObject::GetIsTouched() {
+	return isTouched;
 }
 
-void WinObject::SetId(int _id) {
-	id = _id;
-}
-
-void WinObject::ChangeColor(int color) {
-	switch (color)
-	{
-	case 0:
-		
-		break;
-	case 1:
-
-		break;
-	default:
-		break;
-	}
+void WinObject::SetIsTouched(bool _isTouched) {
+	isTouched = _isTouched;
 }

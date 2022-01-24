@@ -12,25 +12,23 @@ void CollisionProcessor::EndContact(b2Contact* contact) {
 }
 
 void CollisionProcessor::chekedaabb(b2Fixture* fixtureA, b2Fixture* fixtureB) {
-	Ragdoll* bodyA = (Ragdoll*)fixtureA->GetBody();
+	b2Body* bodyA = fixtureA->GetBody();
 
-	WinObject* bodyB = (WinObject*)fixtureB->GetBody();
+	b2Body* bodyB = fixtureB->GetBody();
 
-	/* TODO: solucionar esto*/
+	int id1 = (int)bodyA->GetUserData().pointer;
+	int id2 = (int)bodyB->GetUserData().pointer;
 
-	if (bodyA->GetId() == 0) {
-		printf("UN RAGDOLL CHOCO CON ALGO\n");
-		int id_b = bodyB->GetId();
-		printf("ID 1: %d\tID 2:%d\n\n", bodyA->GetId(), id_b);
-		
-		switch (id_b)
+	if (id1 == 0) {
+		switch (id2)
 		{
 			case 0:
-				printf("---------------Colision:  RAGDOLL <-> RAGDOLL--------------\n");
+				//printf("---------------Colision:  RAGDOLL <-> RAGDOLL--------------\n");
 				break;
 
 			case 1:
 				printf("---------------Colision:  RAGDOLL <-> WIN OBJECT--------------\n");
+				bodyB->GetUserData().pointer = (uintptr_t)0;
 				break;
 
 			default:

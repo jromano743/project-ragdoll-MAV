@@ -44,6 +44,7 @@ Ragdoll::Ragdoll(b2World* _world, RenderWindow* _wnd) {
 		fixtureDef[i].friction = 0.3f;
 		fixtureDef[i].restitution = 0.8f;
 		fixture[i] = body[i]->CreateFixture(&fixtureDef[i]);
+		body[i]->GetUserData().pointer = (uintptr_t)id;
 	}
 
 	//Joints (Resortes)
@@ -234,14 +235,6 @@ void Ragdoll::ApplyForce(Vector2f mouse_position, float force, float rad_angle) 
 }
 
 int Ragdoll::GetUserData() {
-	
-	return id;
-}
-
-int Ragdoll::GetId() {
-	return id;
-}
-
-void Ragdoll::SetId(int _id) {
-	id = _id;
+	//return *(int*)body[0]->GetUserData().pointer;
+	return 0;
 }

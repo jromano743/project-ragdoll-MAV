@@ -38,9 +38,5 @@ public:
 	void ApplyForce(Vector2f mouse_position, float force, float rad_angle);
 	void UpdatePositions();
 	void Draw();
-
-	//user data
 	int GetUserData();
-	int GetId();
-	void SetId(int _id);
 };

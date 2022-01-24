@@ -12,6 +12,7 @@ private:
 	b2Fixture* fixture;
 	b2FixtureDef fixtureDef;
 	int id;
+	bool isTouched;
 
 	RectangleShape* shape;
 
@@ -21,14 +22,11 @@ private:
 
 public:
 	WinObject(b2World* _world, RenderWindow* _wnd, b2Vec2 position);
-	WinObject(int _id) : id{ _id } {};
 	void Draw();
 	void UpdatePosition();
-	void ChangeColor(int color);
-
-	//user data
+	void ChangeColor();
 	int GetUserData();
-	int GetId();
-	void SetId(int _id);
+	bool GetIsTouched();
+	void SetIsTouched(bool _isTouched);
 };
 
