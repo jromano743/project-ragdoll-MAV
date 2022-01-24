@@ -27,6 +27,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Pendulum.h" />
+    <ClInclude Include="PhysicsObstacle.h" />
     <ClInclude Include="Ragdoll.h" />
     <ClInclude Include="WinObject.h" />
   </ItemGroup>
@@ -48,6 +49,7 @@
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Pendulum.cpp" />
+    <ClCompile Include="PhysicsObstacle.cpp" />
     <ClCompile Include="Ragdoll.cpp" />
     <ClCompile Include="WinObject.cpp" />
   </ItemGroup>

@@ -21,6 +21,8 @@ private:
 	//Box2D
 	b2World* world;
 
+	int id;
+
 
 public:
 	Obstacle(b2World* _world, RenderWindow* _wnd, b2Vec2 position);

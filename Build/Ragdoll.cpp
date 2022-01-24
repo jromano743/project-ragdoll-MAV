@@ -22,6 +22,8 @@ Ragdoll::Ragdoll(b2World* _world, RenderWindow* _wnd) {
 	for (int i = 0; i < 6; i++) {
 		bodydef[i].type = b2_dynamicBody;
 		body[i] = _world->CreateBody(&bodydef[i]);
+		//Id de colision
+		body[i]->GetUserData().pointer = (uintptr_t)0;
 	}
 
 

@@ -9,7 +9,7 @@ Pendulum::Pendulum(b2World* _world, RenderWindow* _wnd, b2Vec2 position) {
 
 	//Setup
 	float x = 2.5f, y = 2.5f;
-
+	id = 2;
 	//BOX A
 	// 
 	//Polygon shape
@@ -73,6 +73,10 @@ Pendulum::Pendulum(b2World* _world, RenderWindow* _wnd, b2Vec2 position) {
 	jointDef.damping = 0.3f;
 	jointDef.collideConnected = true;
 	joint = (b2DistanceJoint*)_world->CreateJoint(&jointDef);
+
+	//Id de colision
+	bodyBox->GetUserData().pointer = (uintptr_t)id;
+	bodyBoxB->GetUserData().pointer = (uintptr_t)id;
 }
 
 //Dibuja los rectangulos (SFML)

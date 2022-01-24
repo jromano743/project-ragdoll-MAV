@@ -1,6 +1,7 @@
 #pragma once
 #include <Box2D/Box2D.h>
 #include <SFML\Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "../Build//Ragdoll.h"
 
 using namespace sf;
@@ -14,6 +15,9 @@ private:
 	b2FixtureDef fixDef_canon;
 
 	RectangleShape* shape_canon;
+
+	SoundBuffer bufferEmpty, bufferShoot;
+	Sound emptySound, shooterSound;
 
 	b2World* world;
 

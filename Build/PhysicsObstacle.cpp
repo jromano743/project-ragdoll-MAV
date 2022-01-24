@@ -1,16 +1,15 @@
-#include "Obstacle.h"
-
-Obstacle::Obstacle(b2World* _world, RenderWindow* _wnd,b2Vec2 position) {
+#include "PhysicsObstacle.h"
+PhysicsObstacle::PhysicsObstacle(b2World* _world, RenderWindow* _wnd, b2Vec2 position) {
 
 	//Box2D
 	world = _world;
 	//SFML
 	wnd = _wnd;
 
-	id = 2;
-
 	//Setup
 	float x = 5, y = 5;
+
+	id = 2;
 
 	//Polygon shape
 	b2PolygonShape* shp_box;
@@ -19,12 +18,12 @@ Obstacle::Obstacle(b2World* _world, RenderWindow* _wnd,b2Vec2 position) {
 
 	//Shape Box
 	shapeBox = new RectangleShape;
-	shapeBox->setFillColor(Color::Red);
+	shapeBox->setFillColor(Color::Yellow);
 	shapeBox->setSize(Vector2f(x * 2, y * 2));
 	shapeBox->setOrigin(shapeBox->getSize().x / 2, shapeBox->getSize().y / 2);
 
 	//Bodydef
-	bodyBoxdef.type = b2_staticBody;
+	bodyBoxdef.type = b2_dynamicBody;
 	bodyBoxdef.position = position;
 
 	bodyBox = _world->CreateBody(&bodyBoxdef);
@@ -34,7 +33,7 @@ Obstacle::Obstacle(b2World* _world, RenderWindow* _wnd,b2Vec2 position) {
 
 	//Fixture def
 	fixtureBoxDef.shape = shp_box;
-	fixtureBoxDef.density = 1.f;
+	fixtureBoxDef.density = 0.3f;
 	fixtureBoxDef.restitution = 0.1f;
 	fixtureBoxDef.friction = 0.3f;
 
@@ -43,12 +42,12 @@ Obstacle::Obstacle(b2World* _world, RenderWindow* _wnd,b2Vec2 position) {
 }
 
 //Dibuja los rectangulos (SFML)
-void Obstacle::Draw() {
+void PhysicsObstacle::Draw() {
 	wnd->draw(*shapeBox);
 }
 
 //Posiciona los rectangulos (SFML) en el mismo lugar que los cuerpos (Box2D)
-void Obstacle::UpdatePosition() {
+void PhysicsObstacle::UpdatePosition() {
 	shapeBox->setPosition(bodyBox->GetPosition().x, bodyBox->GetPosition().y);
 	shapeBox->setRotation(bodyBox->GetAngle() * 180 / 3.14f);
 }

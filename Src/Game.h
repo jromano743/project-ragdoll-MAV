@@ -8,6 +8,7 @@
 #include "../Build/Canon.h"
 #include "../Build/CollisionProcessor.h"
 #include "../Build/Obstacle.h"
+#include "../Build/PhysicsObstacle.h"
 #include "../Build/Pendulum.h"
 #include "../Build/WinObject.h"
 #define MAX_LEVELS 2
@@ -42,6 +43,7 @@ private:
 
 	//Nivel del juego
 	int levelGame;
+	bool exit;
 
 	// Cuerpo de box2d
 	b2Body* controlBody;
@@ -50,10 +52,13 @@ private:
 	Canon* canon;
 
 	//Ragdolls
-	Ragdoll* rag;
+	//Ragdoll* rag;
 
 	//Simple box
 	Obstacle* box[3];
+
+	//Physics Box
+	PhysicsObstacle* pyBox[3];
 
 	//Pendulum
 	Pendulum* pendulum[3];

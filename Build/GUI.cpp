@@ -30,7 +30,7 @@ GUI::GUI() {
 	text2.setString("Exit");
 	textTilte.setString("Ragdoll Canon");
 	textContinue.setString("Next Level");
-	textWinGame.setString("Level Completed");
+	textWinGame.setString("Level ended");
 
 	texture.loadFromFile("../Build/res/images/button.png");
 	button1.setTexture(texture);
@@ -119,6 +119,9 @@ void GUI::winMenu(RenderWindow* w, bool haveNextLevel) {
 	musicSong.play();
 	if (!haveNextLevel) {
 		textContinue.setString("Back to menu");
+	}
+	else {
+		textContinue.setString("Next Level");
 	}
 	while (w->isOpen()) {
 		Event e;

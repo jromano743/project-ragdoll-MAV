@@ -38,6 +38,12 @@ Canon::Canon(b2World* _world, RenderWindow* _wnd) {
 
 	//Canon
 	fix_canon = body_canon->CreateFixture(&fixDef_canon);
+
+	bufferEmpty.loadFromFile("../Build/res/audio/canonEmpty.wav");
+	emptySound.setBuffer(bufferEmpty);
+
+	bufferShoot.loadFromFile("../Build/res/audio/canonShoot.wav");
+	shooterSound.setBuffer(bufferShoot);
 }
 
 //Dibuja los rectangulos (SFML)
@@ -85,6 +91,10 @@ void Canon::ShootRagdoll() {
 		bulletRagdool[currentRagdoll] = new Ragdoll(world, wnd, b2Vec2(body_canon->GetPosition().x + sizeCanon.x * 2 + 1.f, body_canon->GetPosition().y - sizeCanon.x * 2));
 		bulletRagdool[currentRagdoll]->ApplyForce(shootForce, body_canon->GetAngle());
 		currentRagdoll++;
+		shooterSound.play();
+	}
+	else {
+		emptySound.play();
 	}
 }
 
@@ -94,5 +104,9 @@ void Canon::ShootRagdollWithMouse(Vector2f mouse_position){
 		bulletRagdool[currentRagdoll] = new Ragdoll(world, wnd, b2Vec2(body_canon->GetPosition().x + sizeCanon.x * 2 + 1.f, body_canon->GetPosition().y - sizeCanon.x * 2));
 		bulletRagdool[currentRagdoll]->ApplyForce(Vector2f(mouse_position.x - body_canon->GetPosition().x, mouse_position.y - body_canon->GetPosition().y), shootForce,body_canon->GetAngle());
 		currentRagdoll++;
+		shooterSound.play();
+	}
+	else {
+		emptySound.play();
 	}
 }

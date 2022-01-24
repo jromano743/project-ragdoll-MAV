@@ -18,12 +18,12 @@ int main(int argc, char* argv[]) {
 	RenderWindow* window = new RenderWindow(VideoMode(800, 600), "TPF");
 	opc = menu->mainMenu(window);
 	do {
+			printf("Current level %d\n", level);
 		switch (opc) {
 		case 0:
 			game = new Game();
 			level = game->StartGame(window, level);
 			delete game;
-			printf("Current level %d", level);
 			if (level > -1) {
 				menu->winMenu(window, true);
 			}
@@ -36,6 +36,7 @@ int main(int argc, char* argv[]) {
 			break;
 		case 1:
 			opc = menu->mainMenu(window);
+			level = 1;
 			break;
 		default:
 			opc = -1;

@@ -23,12 +23,15 @@ void CollisionProcessor::chekedaabb(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 		switch (id2)
 		{
 			case 0:
-				//printf("---------------Colision:  RAGDOLL <-> RAGDOLL--------------\n");
+				//printf("---------------Colision:  WIN OBJECTN -> OTRA COLISION--------------\n");
 				break;
 
 			case 1:
-				printf("---------------Colision:  RAGDOLL <-> WIN OBJECT--------------\n");
+				//printf("---------------Colision:  RAGDOLL -> WIN OBJECT--------------\n");
 				bodyB->GetUserData().pointer = (uintptr_t)0;
+				break;
+			case 2:
+				//printf("---------------Colision:  OTRA COLISION -> WIN OBJECT--------------\n");
 				break;
 
 			default:

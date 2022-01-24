@@ -8,6 +8,7 @@ Game::Game()
 	texture_cursor.loadFromFile("../Build/res/images/cursor-pointer.png");
 	sprite_cursor.setTexture(texture_cursor);
 	sprite_cursor.setPosition(50, 50);
+	exit = false;
 
 	musicBuffer.loadFromFile("../Build/res/audio/game.wav");
 	music.setBuffer(musicBuffer);
@@ -39,30 +40,39 @@ void Game::InitLevels(int level) {
 	{
 		box[i] = NULL;
 		pendulum[i] = NULL;
+		pyBox[i] = NULL;
 	}
 	switch (level)
 	{
 		case 1:
-			rag = new Ragdoll(phyWorld, wnd);
+			//rag = new Ragdoll(phyWorld, wnd);
 			//Canon
 			canon = new Canon(phyWorld, wnd);
 
 			//Objetos de nivel
-			box[0] = new Obstacle(phyWorld, wnd, b2Vec2(70.f, 50.f));
+			box[0] = new Obstacle(phyWorld, wnd, b2Vec2(50.f, 90.f));
 			pendulum[0] = new Pendulum(phyWorld, wnd, b2Vec2(50.f, 10.f));
+			pyBox[1] = new PhysicsObstacle(phyWorld, wnd, b2Vec2(50.f, 80.f));
+			pyBox[2] = new PhysicsObstacle(phyWorld, wnd, b2Vec2(50.f, 70.f));
+			pyBox[0] = new PhysicsObstacle(phyWorld, wnd, b2Vec2(50.f, 60.f));
+
 			winObject = new WinObject(phyWorld, wnd, b2Vec2(75.f, 10.f));
 			break;
 		case 2:
-			rag = new Ragdoll(phyWorld, wnd);
+			//rag = new Ragdoll(phyWorld, wnd);
 			//Canon
 			canon = new Canon(phyWorld, wnd);
 
 			//Objetos de nivel
 			box[0] = new Obstacle(phyWorld, wnd, b2Vec2(90.f, 50.f));
 			box[1] = new Obstacle(phyWorld, wnd, b2Vec2(70.f, 50.f));
-			pendulum[0] = new Pendulum(phyWorld, wnd, b2Vec2(65.f, 10.f));
+			pendulum[0] = new Pendulum(phyWorld, wnd, b2Vec2(45.f, 20.f));
 			pendulum[1] = new Pendulum(phyWorld, wnd, b2Vec2(45.f, 10.f));
 			pendulum[2] = new Pendulum(phyWorld, wnd, b2Vec2(25.f, 10.f));
+			pyBox[0] = new PhysicsObstacle(phyWorld, wnd, b2Vec2(70.f, 40.f));
+			pyBox[1] = new PhysicsObstacle(phyWorld, wnd, b2Vec2(70.f, 30.f));
+			pyBox[2] = new PhysicsObstacle(phyWorld, wnd, b2Vec2(70.f, 70.f));
+
 			winObject = new WinObject(phyWorld, wnd, b2Vec2(90.f, 30.f));
 			break;
 		default:
@@ -73,8 +83,9 @@ void Game::InitLevels(int level) {
 
 void Game::Loop()
 {
-	while(wnd->isOpen() && !winObject->GetIsTouched())
+	while(wnd->isOpen() && !winObject->GetIsTouched() && !exit)
 	{
+
 		wnd->clear(clearColor);
 		DoEvents();
 		CheckCollitions();
@@ -82,6 +93,8 @@ void Game::Loop()
 		DrawGame();
 		wnd->display();
 	}
+
+	if (exit) levelGame = -1;//Vuelta al menu principal
 
 	if (winObject->GetIsTouched()) {
 		levelGame++;
@@ -98,8 +111,8 @@ void Game::UpdatePhysics()
 void Game::DrawGame()
 { 
 	//Dibujado del ragdoll
-	rag->UpdatePositions();
-	rag->Draw();
+	//rag->UpdatePositions();
+	//rag->Draw();
 
 	//Dibujado del canon
 	canon->UpdatePosition();
@@ -110,16 +123,25 @@ void Game::DrawGame()
 	wnd->draw(*walls[1]);
 	wnd->draw(*walls[2]);
 
-	box[0]->UpdatePosition();
-	box[0]->Draw();
+	if (box[0]) {
+		box[0]->UpdatePosition();
+		box[0]->Draw();
+	}
 
 	if (box[1]) {
 		box[1]->UpdatePosition();
 		box[1]->Draw();
 	}
 
-	pendulum[0]->UpdatePosition();
-	pendulum[0]->Draw();
+	if (box[2]) {
+		box[2]->UpdatePosition();
+		box[2]->Draw();
+	}
+
+	if (pendulum[0]) {
+		pendulum[0]->UpdatePosition();
+		pendulum[0]->Draw();
+	}
 
 	if (pendulum[1]) {
 		pendulum[1]->UpdatePosition();
@@ -129,6 +151,21 @@ void Game::DrawGame()
 	if (pendulum[2]) {
 		pendulum[2]->UpdatePosition();
 		pendulum[2]->Draw();
+	}
+
+	if (pyBox[0]) {
+		pyBox[0]->UpdatePosition();
+		pyBox[0]->Draw();
+	}
+
+	if (pyBox[1]) {
+		pyBox[1]->UpdatePosition();
+		pyBox[1]->Draw();
+	}
+
+	if (pyBox[2]) {
+		pyBox[2]->UpdatePosition();
+		pyBox[2]->Draw();
 	}
 
 	//Win object
@@ -156,6 +193,9 @@ void Game::DoEvents()
 				if (Keyboard::isKeyPressed(Keyboard::Space)) {
 					canon->ShootRagdoll();
 				}
+				if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+					exit = true;
+				}
 				break;
 			case sf::Event::MouseMoved:
 				sprite_cursor.setPosition((float)evt.mouseMove.x, (float)evt.mouseMove.y);
@@ -181,7 +221,6 @@ void Game::SetZoom(bool isGame)
 {
 	View camara;
 	Vector2f data = camara.getCenter();
-	printf("%f    %f", data.x, data.y);
 	// Posicion del view
 	if (isGame) 
 	{
